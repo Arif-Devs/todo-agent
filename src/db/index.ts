@@ -1,2 +1,2 @@
 export * from "./drizzle.js";
-export * from "./schema.js";
+export * from "./todo.schema.js";
