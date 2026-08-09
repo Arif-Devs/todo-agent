@@ -1,13 +1,15 @@
-import { sql } from "drizzle-orm";
-import { db } from "./core/database/index.js";
+import app from "./app.js";
+import { env } from "./core/config/env.js";
 
-async function bootstrap() {
+const startServer = async () => {
   try {
-    const result = await db.execute(sql`SELECT NOW()`);
-    console.log("DATABASE CONNECTED ON PORT !");
-    //console.log(result);
+    app.listen(env.PORT, () => {
+      console.log(`Server running on port : ${env.PORT}`);
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Failed to start server:", error);
+    process.exit(1);
   }
-}
-bootstrap();
+};
+
+startServer();
