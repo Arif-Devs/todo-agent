@@ -32,5 +32,24 @@ export class TodoController {
       message: "Todo retrieved success!",
       data: todos
     })
-  };
+  }
+
+  getById = async (req: Request, res: Response)=>{
+    const {id} = req.params
+
+    if(!id || Array.isArray(id)){
+      return res.status(400).json({
+      success: false,
+      message: "Invalid todo id",
+    });
+    }
+    
+    const todo = await this.todoService.getTodoById(id)
+
+    res.status(200).json({
+      success: true,
+      message: "Todo retrieved success!",
+      data: todo
+    })
+  }
 }

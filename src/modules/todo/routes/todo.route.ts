@@ -15,5 +15,6 @@ router.get("/error", () => {
 router.post("/", validateRequest(createTodoSchema), todoController.create);
 
 router.get("/", todoController.getAll)
+router.get("/:id", todoController.getById)
 
 export default router;
