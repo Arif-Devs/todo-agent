@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { db } from "../../../core/database/db.js";
 import { todos } from "../../../core/database/schema/todo.schema.js";
 
@@ -17,5 +18,15 @@ export class TodoRepository {
 
   async findAll() {
     return db.select().from(todos);
+  }
+
+  async findById(id: string){
+    const [todo] = await db
+    .select()
+    .from(todos)
+    .where(eq(todos.id, id))
+    .limit(1)
+
+    return todo
   }
 }
