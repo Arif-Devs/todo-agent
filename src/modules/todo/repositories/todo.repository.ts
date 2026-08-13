@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { db } from "../../../core/database/db.js";
+import type { CreateTodoDto,UpdateTodoDto } from "../validations/todo.validation.js";
 import { todos } from "../../../core/database/schema/todo.schema.js";
 
-import type { CreateTodoDto } from "../validations/todo.validation.js";
 
 export class TodoRepository {
   async create(data: CreateTodoDto) {
@@ -29,4 +29,22 @@ export class TodoRepository {
 
     return todo
   }
+  async update(id: string, data: UpdateTodoDto){
+    const [todo] = await db
+    .update(todos)
+    .set({...data, updatedAt: new Date()})
+    .where(eq(todos.id, id))
+    .returning()
+
+    return todo
+  }
+  async delete(id: string){
+    const [todo] = await db
+    .delete(todos)
+    .where(eq(todos.id, id))
+    .returning()
+
+    return todo
+  }
+
 }

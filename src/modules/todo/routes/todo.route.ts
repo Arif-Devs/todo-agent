@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { todoController } from "../controllers/index.js";
-import { createTodoSchema } from "../validations/todo.validation.js";
+import { createTodoSchema, updateTodoSchema } from "../validations/todo.validation.js";
 import { validateRequest } from "../../../middlewares/validate-request.js";
 import { AppError } from "../../../core/errors/app-error.js";
 
@@ -16,5 +16,7 @@ router.post("/", validateRequest(createTodoSchema), todoController.create);
 
 router.get("/", todoController.getAll)
 router.get("/:id", todoController.getById)
+router.patch("/:id", validateRequest(updateTodoSchema), todoController.update)
+router.delete("/:id", todoController.delete)
 
 export default router;

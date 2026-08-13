@@ -52,4 +52,42 @@ export class TodoController {
       data: todo
     })
   }
+
+  update = async(req: Request, res: Response)=>{
+    const {id} = req.params
+
+    if(!id || Array.isArray(id)){
+      return res.status(400).json({
+        success: false,
+        message: "Invalid id"
+      }) 
+    }
+    
+    const todo = await this.todoService.updateTodo(id, req.body)
+      
+    return res.status(200).json({
+      success: true,
+      message: "Todo update successful",
+      data: todo
+    })
+
+  }
+
+  delete = async( req: Request, res: Response)=>{
+    const {id} = req.params
+
+    if(!id || Array.isArray(id)){
+      return res.status(400).json({
+        success: false,
+        message: "Invalid id"
+      })
+    }
+
+    await this.todoService.deleteTodo(id)
+
+    return res.status(200).json({
+      success: true,
+      message: "Todo deleted successfully!"
+    })
+  }
 }

@@ -1,7 +1,6 @@
-import { threadId } from "node:worker_threads";
 import { TodoRepository } from "../repositories/todo.repository.js";
 
-import type { CreateTodoDto } from "../validations/todo.validation.js";
+import type { CreateTodoDto, UpdateTodoDto } from "../validations/todo.validation.js";
 import { AppError } from "../../../core/errors/app-error.js";
 
 export class TodoService {
@@ -24,5 +23,21 @@ export class TodoService {
     }
     return todo
   }
+
+  async updateTodo(id: string, payload: UpdateTodoDto){
+    const existingTodo = await this.todoRepository.findById(id)
+     
+    if(!existingTodo) throw new AppError("Todo not found", 404)
+
+    return this.todoRepository.update(id, payload)
   
+  } 
+  async deleteTodo(id: string){
+    const existingTodo = await this.todoRepository.findById(id)
+
+    if(!existingTodo) throw new AppError("Todo not found", 404)
+    
+    await this.todoRepository.delete(id)
+    return existingTodo
+  }
 }
