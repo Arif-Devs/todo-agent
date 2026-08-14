@@ -11,8 +11,21 @@ export class TodoService {
     return todo;
   }
 
-  async getAllTodos() {
-    return this.todoRepository.findAll();
+  //Get all todos
+  async getAllTodos(page: number, limit: number) {
+    const result = await this.todoRepository.findAll(page, limit);
+
+    const totalPages = Math.ceil(result.total / limit)
+
+    return{
+      data: result.data,
+      pagination:{
+        page,
+        limit,
+        total: result.total,
+        totalPages
+      }
+    }
   }
 
   async getTodoById(id: string){

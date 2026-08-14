@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { positive, z } from "zod";
 
 export const createTodoSchema = z.object({
   title: z
@@ -37,6 +37,27 @@ export const updateTodoSchema = z.object({
       message: "At least one field is required",
       }
   );
+
+  export const paginationSchema = z.object({
+    page: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(1),
+
+    limit: z. coerce
+      .number()
+      .int()
+      .positive()
+      .max(100)
+      .default(10)
+  })
+
+  export type PaginationDto = z.infer<typeof paginationSchema>
+
+
+
+
 
 export type UpdateTodoDto = z.infer<typeof updateTodoSchema>;
 export type CreateTodoDto = z.infer<typeof createTodoSchema>;

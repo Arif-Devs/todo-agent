@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { TodoRepository } from "../repositories/todo.repository.js";
 
 import { TodoService } from "../services/todo.service.js";
-import { success } from "zod";
+
 
 export class TodoController {
   private readonly todoService: TodoService;
@@ -24,13 +24,17 @@ export class TodoController {
     });
   };
 
+  //get all todos
   getAll = async (req: Request, res: Response) => {
-    const todos = await this.todoService.getAllTodos();
+    
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+    const result = await this.todoService.getAllTodos(page, limit)
 
     res.status(200).json({
       success: true,
       message: "Todo retrieved success!",
-      data: todos
+      ...result
     })
   }
 

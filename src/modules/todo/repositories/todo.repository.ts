@@ -1,8 +1,7 @@
-import { eq } from "drizzle-orm";
 import { db } from "../../../core/database/db.js";
 import type { CreateTodoDto,UpdateTodoDto } from "../validations/todo.validation.js";
 import { todos } from "../../../core/database/schema/todo.schema.js";
-
+import {count, desc, eq} from "drizzle-orm"
 
 export class TodoRepository {
   async create(data: CreateTodoDto) {
@@ -16,8 +15,25 @@ export class TodoRepository {
     return todo;
   }
 
-  async findAll() {
-    return db.select().from(todos);
+  async findAll(page: number, limit: number) {
+    const offset = (page - 1) * limit
+
+    const data = await db
+    .select()
+    .from(todos)
+    .orderBy(desc(todos.createdAt))
+    .limit(limit)
+    .offset(offset)
+
+    const countResult = await db
+    .select({
+      total: count()
+    })
+    .from(todos)
+
+    const total = countResult[0]?.total ?? 0
+
+    return{data, total: Number(total)}
   }
 
   async findById(id: string){
@@ -47,4 +63,5 @@ export class TodoRepository {
     return todo
   }
 
+  
 }
