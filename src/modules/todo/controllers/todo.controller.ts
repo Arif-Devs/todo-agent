@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { TodoRepository } from "../repositories/todo.repository.js";
 
 import { TodoService } from "../services/todo.service.js";
+import type { TodoQueryDto } from "../validations/todo.validation.js";
 
 
 export class TodoController {
@@ -27,9 +28,8 @@ export class TodoController {
   //get all todos
   getAll = async (req: Request, res: Response) => {
     
-    const page = req.query.page as unknown as number
-    const limit = req.query.limit as unknown as number
-    const result = await this.todoService.getAllTodos(page, limit)
+    const query = req.query as unknown as TodoQueryDto
+    const result = await this.todoService.getAllTodos(query)
 
     res.status(200).json({
       success: true,

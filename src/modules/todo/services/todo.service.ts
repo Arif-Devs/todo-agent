@@ -1,6 +1,6 @@
 import { TodoRepository } from "../repositories/todo.repository.js";
 
-import type { CreateTodoDto, UpdateTodoDto } from "../validations/todo.validation.js";
+import type { CreateTodoDto, TodoQueryDto, UpdateTodoDto } from "../validations/todo.validation.js";
 import { AppError } from "../../../core/errors/app-error.js";
 
 export class TodoService {
@@ -12,16 +12,17 @@ export class TodoService {
   }
 
   //Get all todos
-  async getAllTodos(page: number, limit: number) {
-    const result = await this.todoRepository.findAll(page, limit);
+  async getAllTodos(query: TodoQueryDto) {
+    
+    const result = await this.todoRepository.findAll(query);
 
-    const totalPages = Math.ceil(result.total / limit)
+    const totalPages = Math.ceil(result.total / query.limit)
 
     return{
       data: result.data,
       pagination:{
-        page,
-        limit,
+        page: query.page,
+        limit: query.limit,
         total: result.total,
         totalPages
       }

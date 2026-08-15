@@ -1,4 +1,4 @@
-import { positive, z } from "zod";
+import { z } from "zod";
 
 export const createTodoSchema = z.object({
   title: z
@@ -53,11 +53,12 @@ export const updateTodoSchema = z.object({
       .default(10)
   })
 
-  export type PaginationDto = z.infer<typeof paginationSchema>
+  export const todoQuerySchema =  paginationSchema.extend({
+    completed: z.coerce.boolean().optional()
+  })
 
 
-
-
-
+export type TodoQueryDto = z.infer<typeof todoQuerySchema>;
+export type PaginationDto = z.infer<typeof paginationSchema>;
 export type UpdateTodoDto = z.infer<typeof updateTodoSchema>;
 export type CreateTodoDto = z.infer<typeof createTodoSchema>;
