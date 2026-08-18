@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 export const createTodoSchema = z.object({
@@ -54,9 +55,21 @@ export const updateTodoSchema = z.object({
   })
 
   export const todoQuerySchema =  paginationSchema.extend({
-    completed: z.coerce.boolean().optional()
+    completed: z.coerce.boolean().optional(),
+    sortBy: z
+      .enum(["createdAt", "updatedAt", "title"])
+      .default("createdAt"),
+
+      sortOrder: z
+      .enum(["asc", "desc"])
+      .default("desc")
   })
 
+  export const todoIdSchema = z.object({id: z.string().uuid("Invalid todo id")})
+
+  export type TodoParams = {
+    id: string
+  }
 
 export type TodoQueryDto = z.infer<typeof todoQuerySchema>;
 export type PaginationDto = z.infer<typeof paginationSchema>;

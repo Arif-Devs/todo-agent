@@ -31,41 +31,27 @@ export class TodoController {
     const query = req.query as unknown as TodoQueryDto
     const result = await this.todoService.getAllTodos(query)
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Todo retrieved success!",
       ...result
     })
   }
 
-  getById = async (req: Request, res: Response)=>{
+  getById = async (req: Request<{id: string}>, res: Response)=>{
     const {id} = req.params
-
-    if(!id || Array.isArray(id)){
-      return res.status(400).json({
-      success: false,
-      message: "Invalid todo id",
-    });
-    }
     
     const todo = await this.todoService.getTodoById(id)
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Todo retrieved success!",
       data: todo
     })
   }
 
-  update = async(req: Request, res: Response)=>{
+  update = async(req: Request<{id: string}, unknown>, res: Response)=>{
     const {id} = req.params
-
-    if(!id || Array.isArray(id)){
-      return res.status(400).json({
-        success: false,
-        message: "Invalid id"
-      }) 
-    }
     
     const todo = await this.todoService.updateTodo(id, req.body)
       
@@ -77,15 +63,8 @@ export class TodoController {
 
   }
 
-  delete = async( req: Request, res: Response)=>{
+  delete = async( req: Request<{id: string}>, res: Response)=>{
     const {id} = req.params
-
-    if(!id || Array.isArray(id)){
-      return res.status(400).json({
-        success: false,
-        message: "Invalid id"
-      })
-    }
 
     await this.todoService.deleteTodo(id)
 
