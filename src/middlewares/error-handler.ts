@@ -2,17 +2,14 @@ import type { Request, Response, NextFunction } from "express";
 
 import { AppError } from "../core/errors/app-error.js";
 
-export const errorHandler = (
-  error: unknown,
-  req: Request,
+export const globalErrorHandler = (error: unknown, req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   console.log(error);
 
   if (error instanceof AppError) {
-    return res
-      .status(error.statusCode)
+    return res.status(error.statusCode)
       .json({ success: false, message: error.message });
   }
 

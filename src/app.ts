@@ -1,6 +1,6 @@
 import express from "express";
 import todoRoutes from "./modules/todo/routes/todo.route.js";
-import { errorHandler } from "./middlewares/error-handler.js";
+import { globalErrorHandler } from "./middlewares/error-handler.js";
 
 const app = express();
 app.use(express.json());
@@ -13,6 +13,6 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/v1/todos", todoRoutes);
-app.use(errorHandler);
+app.use(globalErrorHandler);
 
 export default app;

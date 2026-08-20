@@ -71,6 +71,8 @@ export const updateTodoSchema = z.object({
     id: string
   }
 
+
+
 export type TodoQueryDto = z.infer<typeof todoQuerySchema>;
 export type PaginationDto = z.infer<typeof paginationSchema>;
 export type UpdateTodoDto = z.infer<typeof updateTodoSchema>;

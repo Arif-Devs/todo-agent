@@ -2,6 +2,7 @@ import { TodoRepository } from "../repositories/todo.repository.js";
 
 import type { CreateTodoDto, TodoQueryDto, UpdateTodoDto } from "../validations/todo.validation.js";
 import { AppError } from "../../../core/errors/app-error.js";
+import { NotFoundError } from "../../../core/errors/not-found.error.js";
 
 export class TodoService {
   constructor(private readonly todoRepository: TodoRepository) {}
@@ -13,9 +14,7 @@ export class TodoService {
 
   //Get all todos
   async getAllTodos(query: TodoQueryDto) {
-    
-    const result = await this.todoRepository.findAll(query);
-
+    const result = await this.todoRepository.findAll(query)
     const totalPages = Math.ceil(result.total / query.limit)
 
     return{
@@ -32,16 +31,14 @@ export class TodoService {
   async getTodoById(id: string){
     const todo = await this.todoRepository.findById(id)
 
-    if(!todo){
-      throw new AppError("Todo not found!", 400)
-    }
+    if(!todo) throw new NotFoundError("Todo not found!")
     return todo
   }
 
   async updateTodo(id: string, payload: UpdateTodoDto){
     const existingTodo = await this.todoRepository.findById(id)
      
-    if(!existingTodo) throw new AppError("Todo not found", 404)
+    if(!existingTodo) throw new NotFoundError("Todo not found")
 
     return this.todoRepository.update(id, payload)
   
@@ -49,7 +46,7 @@ export class TodoService {
   async deleteTodo(id: string){
     const existingTodo = await this.todoRepository.findById(id)
 
-    if(!existingTodo) throw new AppError("Todo not found", 404)
+    if(!existingTodo) throw new NotFoundError("Todo not found")
     
     await this.todoRepository.delete(id)
     return existingTodo

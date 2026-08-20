@@ -3,7 +3,9 @@ import type { Request, Response } from "express";
 import { TodoRepository } from "../repositories/todo.repository.js";
 
 import { TodoService } from "../services/todo.service.js";
-import type { TodoQueryDto } from "../validations/todo.validation.js";
+import type { TodoParams, TodoQueryDto, UpdateTodoDto } from "../validations/todo.validation.js";
+import { AppError } from "../../../core/errors/app-error.js";
+
 
 
 export class TodoController {
@@ -11,10 +13,10 @@ export class TodoController {
 
   constructor() {
     const todoRepository = new TodoRepository();
-
     this.todoService = new TodoService(todoRepository);
   }
 
+  
   create = async (req: Request, res: Response) => {
     const todo = await this.todoService.createTodo(req.body);
 
@@ -27,50 +29,68 @@ export class TodoController {
 
   //get all todos
   getAll = async (req: Request, res: Response) => {
-    
-    const query = req.query as unknown as TodoQueryDto
-    const result = await this.todoService.getAllTodos(query)
+  try {
+    const query = req.query as unknown as TodoQueryDto;
+
+    const result = await this.todoService.getAllTodos(query);
 
     return res.status(200).json({
       success: true,
-      message: "Todo retrieved success!",
-      ...result
-    })
+      message: "Todos retrieved successfully!",
+      ...result,
+    });
+
+  } catch (error) {
+
+    if (error instanceof AppError) {
+      return res.status(error.statusCode).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error!",
+    });
   }
+};
 
-  getById = async (req: Request<{id: string}>, res: Response)=>{
-    const {id} = req.params
-    
-    const todo = await this.todoService.getTodoById(id)
+  getById = async (req: Request,res: Response) => {
+  const { id } = req.params;
 
-    return res.status(200).json({
-      success: true,
-      message: "Todo retrieved success!",
-      data: todo
-    })
-  }
+  const todo = await this.todoService.getTodoById(id as string);
 
-  update = async(req: Request<{id: string}, unknown>, res: Response)=>{
-    const {id} = req.params
-    
-    const todo = await this.todoService.updateTodo(id, req.body)
-      
-    return res.status(200).json({
-      success: true,
-      message: "Todo update successful",
-      data: todo
-    })
+  return res.status(200).json({
+    success: true,
+    message: "Todo retrieved success!",
+    data: todo,
+  });
+};
 
-  }
+  update = async (req: Request,res: Response) => {
+  const { id } = req.params;
 
-  delete = async( req: Request<{id: string}>, res: Response)=>{
-    const {id} = req.params
+  const todo = await this.todoService.updateTodo(id as string,req.body);
 
-    await this.todoService.deleteTodo(id)
+  return res.status(200).json({
+    success: true,
+    message: "Todo update successful",
+    data: todo,
+  });
+};
 
-    return res.status(200).json({
-      success: true,
-      message: "Todo deleted successfully!"
-    })
-  }
+  delete = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.params;
+
+  await this.todoService.deleteTodo(id as string);
+
+  return res.status(200).json({
+    success: true,
+    message: "Todo deleted successfully!",
+  });
+};
 }
