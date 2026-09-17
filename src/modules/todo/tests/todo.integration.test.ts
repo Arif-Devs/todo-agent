@@ -304,5 +304,5 @@ it("should return 400 for invalid sort field", async () => {
 
   expect(response.status).toBe(400);
   expect(response.body.success).toBe(false);
-});
+})
 });
