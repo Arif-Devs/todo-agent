@@ -1,10 +1,34 @@
 import request from "supertest";
 import  app  from "../../../app.js"
-import { describe, expect, it } from "@jest/globals";
+import { afterAll, describe, expect, it } from "@jest/globals";
+import { beforeEach } from "node:test";
+import { db, pool } from "../../../core/database/db.js";
+import { todos } from "../../../core/database/schema/todo.schema.js";
 
 
+it("should start with an empty todo database", async () => {
+  
+  const response = await request(app)
+  .get("/api/v1/todos")
+  .query({
+    page: 1,
+    limit: 10
+  });
+  
+  expect(response.status).toBe(200);
+});
 
 describe("Todo API Integration Test", () => {
+  
+  beforeEach(async () =>{
+    await db.delete(todos)
+  })
+  
+  afterAll(async () => {
+    await pool.end();
+  });
+
+  
   it("should create a todo", async () => {
     const response = await request(app)
       .post("/api/v1/todos")

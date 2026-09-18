@@ -1,3 +1,2 @@
-import { TodoController } from "./todo.controller.js";
 
-export const todoController = new TodoController();
+export { todoController } from "../../../container/todo.container.js";

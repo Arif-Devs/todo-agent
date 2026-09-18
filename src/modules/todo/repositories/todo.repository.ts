@@ -5,7 +5,7 @@ import type { TodoEntity } from "../entities/todo.entities.js";
 import type { CreateTodoDto, TodoQueryDto, UpdateTodoDto } from "../validations/todo.validation.js";
 import { BaseRepository } from "./base.repository.js";
 import type { ITodoRepository } from "./todo.repository.interface.js";
-export class TodoRepository extends BaseRepository<TEntity, TCreate, TUpdate> implements ITodoRepository{
+export class TodoRepository extends BaseRepository<TodoEntity, CreateTodoDto, UpdateTodoDto> implements ITodoRepository{
   
   async create(payload: CreateTodoDto): Promise<TodoEntity> {
     const [todo] = await db
@@ -34,7 +34,7 @@ export class TodoRepository extends BaseRepository<TEntity, TCreate, TUpdate> im
     createdAt: todos.createdAt,
     updatedAt: todos.updatedAt,
     title: todos.title,
-    }[sortBy];
+    }[sortBy ?? "createdAt"];
 
     const orderBy = sortOrder === "asc"? asc(sortColumn): desc(sortColumn);
 

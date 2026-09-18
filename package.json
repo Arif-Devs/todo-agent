@@ -7,7 +7,9 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "keywords": [],
   "author": "",
@@ -18,8 +20,10 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^26.1.2",
     "@types/pg": "^8.20.3",
+    "@types/supertest": "^7.2.1",
     "drizzle-kit": "^0.31.10",
     "jest": "^30.5.1",
+    "supertest": "^7.2.2",
     "ts-alias": "^0.0.7",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
