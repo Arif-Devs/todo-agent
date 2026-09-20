@@ -1,1 +1,1 @@
-export * from "./db.js";
+export {db, pool} from "./db.js";
