@@ -10,4 +10,6 @@ export const env = {
   DATABASE_URL: isTest
   ? process.env.TEST_DATABASE_URL! 
   : process.env.DATABASE_URL,
+
+  TODO_API_URL: process.env.TODO_API_URL || "http://localhost:5000"
 };
