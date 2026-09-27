@@ -1,24 +1,51 @@
 import { env } from "../../../../core/config/env.js";
 import type { ListTodosToolInput, ListTodosToolResponse } from "./list-todos.types.js";
+import { listTodosToolSchema } from "./list-todo.validation.js";
+import { ToolError } from "../../../errors/tools-error.js";
+import { normalizeToolError } from "../../../errors/normalize-tool-error.js";
 
 export const listTodosTool = async(input: ListTodosToolInput = {}): Promise<ListTodosToolResponse> =>{
-    const searchParams = new URLSearchParams()
 
-    if(input.page !== undefined){
-        searchParams.set("page", String(input.page))
+    try {
+    const validatedInput = listTodosToolSchema.parse(input);
+    const searchParams = new URLSearchParams();
+
+    if (validatedInput.page !== undefined) {
+      searchParams.set(
+        "page",
+        String(validatedInput.page)
+      );
     }
 
-    if(input.limit !== undefined){
-        searchParams.set("limit", String(input.limit))
+    if (validatedInput.limit !== undefined) {
+      searchParams.set(
+        "limit",
+        String(validatedInput.limit)
+      );
     }
 
-    const queryString = searchParams.toString()
+    const queryString = searchParams.toString();
 
-    const url = queryString ? `${env.TODO_API_URL}/api/v1/todos?${queryString}`:`${env.TODO_API_URL}/api/v1/todos`
+    const url = queryString
+      ? `${env.TODO_API_URL}/api/v1/todos?${queryString}`:`${env.TODO_API_URL}/todos`;
 
-    const response = await fetch(url,{method: "GET"})
+    let response: Response;
 
-    const result = (await response.json()) as ListTodosToolResponse
+    try {
+      response = await fetch(url, {
+        method: "GET",
+      });
+    } catch {
+      throw new ToolError("TODO_API_UNAVAILABLE","Todo API is unavailable");
+    }
 
-    return result
-}
+    if (!response.ok) {
+      throw new ToolError("TODO_LIST_FAILED","Failed to retrieve todos", response.status);
+    }
+
+    return (await response.json()) as ListTodosToolResponse;
+
+  } catch (error) {
+    throw normalizeToolError(error);
+  }
+};
