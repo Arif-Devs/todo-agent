@@ -4,9 +4,7 @@ import { ToolError } from "../../../errors/tools-error.js";
 import type {UpdateTodoToolInput, UpdateTodoToolResponse} from "./update-todo.types.js";
 import { updateTodoToolSchema } from "./update-todo.validation.js";
 
-export const updateTodoTool = async (
-  input: UpdateTodoToolInput
-): Promise<UpdateTodoToolResponse> => {
+export const updateTodoTool = async (input: UpdateTodoToolInput): Promise<UpdateTodoToolResponse> => {
 
     try {
     const validatedInput = updateTodoToolSchema.parse(input);
