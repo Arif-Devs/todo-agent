@@ -7,6 +7,7 @@ import { validateQuery } from "../../../middlewares/validate-query.js";
 import { validateParams } from "../../../middlewares/validate-params.js";
 import { asyncHandler } from "../../../core/utils/async-handler.js";
 
+
 const router = Router();
 
 // error test route
@@ -24,5 +25,7 @@ router.get("/:id",validateParams(todoIdSchema), asyncHandler(todoController.getB
 router.patch("/:id", validateParams(todoIdSchema),validateRequest(updateTodoSchema), asyncHandler (todoController.update))
 
 router.delete("/:id",validateParams(todoIdSchema) ,asyncHandler(todoController.delete))
+
+
 
 export default router;

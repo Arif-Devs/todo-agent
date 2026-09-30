@@ -3,6 +3,9 @@ import type { ListTodosToolInput, ListTodosToolResponse } from "./list-todos.typ
 import { listTodosToolSchema } from "./list-todo.validation.js";
 import { ToolError } from "../../../errors/tools-error.js";
 import { normalizeToolError } from "../../../errors/normalize-tool-error.js";
+import { url } from "inspector/promises";
+
+
 
 export const listTodosTool = async(input: ListTodosToolInput = {}): Promise<ListTodosToolResponse> =>{
 
@@ -11,17 +14,11 @@ export const listTodosTool = async(input: ListTodosToolInput = {}): Promise<List
     const searchParams = new URLSearchParams();
 
     if (validatedInput.page !== undefined) {
-      searchParams.set(
-        "page",
-        String(validatedInput.page)
-      );
+      searchParams.set("page", String(validatedInput.page));
     }
 
     if (validatedInput.limit !== undefined) {
-      searchParams.set(
-        "limit",
-        String(validatedInput.limit)
-      );
+      searchParams.set("limit", String(validatedInput.limit));
     }
 
     const queryString = searchParams.toString();

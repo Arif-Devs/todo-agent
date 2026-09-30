@@ -1,12 +1,8 @@
 import { createTodoTool } from "./src/hermes/tools/todo/create-todo/create-todo.tool.js";
 
-try {
-  const result = await createTodoTool({
-    title: "",
-    description: "Test createTodo tool",
-  });
+const result = await createTodoTool({
+  title: "Learn Hermes Integration",
+  description: "Test Hermes Todo API integration",
+});
 
-  console.log(JSON.stringify(result, null, 2));
-} catch (error) {
-  console.error("Tool Error:", error);
-}
+console.log(JSON.stringify(result, null, 2));

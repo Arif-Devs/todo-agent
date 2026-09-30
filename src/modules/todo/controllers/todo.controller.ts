@@ -25,7 +25,7 @@ export class TodoController {
 
   //get all todos
   getAll = async (req: Request, res: Response) => {
-    const query = req.query as unknown as TodoQueryDto;
+    const query = res.locals.query as TodoQueryDto;
 
     const result = await this.todoService.getAllTodos(query);
     const response: ApiResponse<TodoListResponseDto> ={
