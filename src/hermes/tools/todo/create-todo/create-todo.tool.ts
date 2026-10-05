@@ -26,6 +26,9 @@ export const createTodoTool = async(input: CreateTodoToolInput): Promise<CreateT
   } catch {
     throw new ToolError("TODO_API_UNAVAILABLE", "Todo API is unavailable");
   }
+  const responseText = await response.text();
+  // console.log("Todo API status:", response.status);
+  // console.log("Todo API response:", responseText);
 
   if (!response.ok) {
     if (response.status === 400) {
@@ -34,8 +37,8 @@ export const createTodoTool = async(input: CreateTodoToolInput): Promise<CreateT
 
     throw new ToolError("TODO_CREATE_FAILED", "Failed to create todo", response.status);
   }
-
-  return (await response.json()) as CreateTodoToolResponse;
+  const result = JSON.parse(responseText)
+  return result
 
 } catch (error) {
   throw normalizeToolError(error);
